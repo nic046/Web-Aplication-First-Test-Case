@@ -1,13 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
-import { env } from 'process';
+import { env as processEnv } from 'process';
+import dotenv from 'dotenv';
+import path from 'path';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -17,11 +13,11 @@ export default defineConfig({
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!env.CI,
+  forbidOnly: !!processEnv.CI,
   /* Retry on CI only */
-  retries: env.CI ? 2 : 0,
+  retries: processEnv.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: env.CI ? 1 : undefined,
+  workers: processEnv.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['list'],
@@ -34,7 +30,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    baseURL: env.BASE_URL,
+    baseURL: processEnv.BASE_URL,
     headless: true,
   },
 
