@@ -89,6 +89,10 @@
     <p><strong>Result:</strong> Five scenarios are grouped by feature and use fixture-provided Page
       Objects. Assertions remain in specs. <code>npx tsc --noEmit</code> passes. No dedicated
       linter is configured in <code>package.json</code>.</p>
+    <figure>
+      <img src="./evidence/point-2-prompt-execution.png" alt="Adapted prompts and execution outcomes for the automation architect, git standards, and spec standards reviews">
+      <figcaption>Point 2: adapted prompt execution and observed outcomes.</figcaption>
+    </figure>
 
     <h3>Skill verification and expected output format</h3>
     <table>
@@ -111,6 +115,10 @@
         </tr>
       </tbody>
     </table>
+    <figure>
+      <img src="./evidence/point-3-skill-verification.png" alt="Skill findings and whether native expected output formats could be verified">
+      <figcaption>Point 3: skill verification findings and output-format check.</figcaption>
+    </figure>
 
     <h2>Prompt iteration</h2>
     <ol>
@@ -125,6 +133,10 @@
         file. This surfaced the tracked local environment file; it is now excluded from future
         commits while remaining on the workstation.</li>
     </ol>
+    <figure>
+      <img src="./evidence/point-4-prompt-iteration.png" alt="Before and after prompt iteration from failed auth-dependent cases to five passing observable UI tests">
+      <figcaption>Point 4: prompt iteration, initial failures, and refined passing scope.</figcaption>
+    </figure>
     <p class="note"><strong>History note:</strong> Removing <code>.env</code> from the current
       Git index does not erase it from older commits. If it contained real credentials, rotate
       them and consider a separate history-cleanup process.</p>
@@ -156,7 +168,7 @@ passed</pre>
       project working copy. The report folder is ignored by Git and can be regenerated with the
       command above.</p>
 
-    <h2>Screenshots of skills and written files</h2>
+    <h2>Point 5: screenshots of written files</h2>
     <figure>
       <img src="./evidence/automation-architect.png" alt="Automation architect skill file">
       <figcaption>Repository skill: automation-architect/SKILL.md</figcaption>
