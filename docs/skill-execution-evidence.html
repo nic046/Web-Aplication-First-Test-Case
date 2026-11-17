@@ -63,32 +63,54 @@
       </tbody>
     </table>
 
-    <h2>Adapted prompts and execution</h2>
+    <h2>Skill execution - before and after</h2>
     <p>The repository provides <code>automation-architect</code>, <code>pom-architect</code>, and
       <code>test-standards</code> skill files. These were read and applied directly as the
       workspace’s custom-skill instructions. This session does not provide a separate custom-skill
-      invocation tool, nor does the repository contain <code>git-conventions</code> or
-      <code>code-conventions</code> skill files; those two checks below were executed as adapted
-      review prompts and are not represented as native skill invocations.</p>
+      invocation tool, nor does the repository contain <code>git-standards</code> or
+      <code>spec-standards</code> skill files. Their prompts below were run as adapted, direct
+      reviews; they are not represented as native skill invocations.</p>
 
-    <h3>automation-architect</h3>
+    <h3>automation-architect prompt</h3>
     <pre>Run the full automation-architect pipeline on this Playwright + TypeScript project. Inspect all specs, Page Objects, fixtures, test data, aliases, tsconfig, and Playwright config. Apply pom-architect and test-standards; do not assume authentication succeeded. Preserve behavior where verified, report blockers accurately, and validate the changed scope.</pre>
     <p><strong>Result:</strong> The POM structure, locator getters, async actions, assertion placement,
       fixture ownership, alias usage, test grouping, and test independence were reviewed. The
       hardcoded sample account was removed from fixture data. Final result: zero remaining
       violations in the reviewed scope.</p>
 
-    <h3>git-conventions / git-standards adapted review</h3>
+    <h3>git-standards adapted prompt</h3>
     <pre>Review the repository state and changed files for Git conventions: confirm the intended branch and remote, inspect tracked environment files and ignore rules, check whitespace, and ensure only task-related files are staged. Do not expose environment values.</pre>
     <p><strong>Result:</strong> Found and corrected the tracked <code>.env</code> issue. The local
       file remains available for running tests. <code>git diff --check</code> passes. Existing
       <code>playwright.config.ts</code> changes were present before this task and were not altered.</p>
 
-    <h3>code-conventions / spec-standards adapted review</h3>
-    <pre>Review the Playwright specs and related TypeScript changes for project conventions: use @fixtures and path aliases, keep interactions in Page Objects, use descriptive independent tests, avoid hardcoded credentials, and run the narrowest available type-check and Chromium tests.</pre>
+    <h3>spec-standards adapted prompt</h3>
+    <pre>Review the Playwright specs and related TypeScript changes for spec conventions: use @fixtures and path aliases, keep interactions in Page Objects, use descriptive independent tests, avoid hardcoded credentials, and run the narrowest available type-check and Chromium tests.</pre>
     <p><strong>Result:</strong> Five scenarios are grouped by feature and use fixture-provided Page
       Objects. Assertions remain in specs. <code>npx tsc --noEmit</code> passes. No dedicated
       linter is configured in <code>package.json</code>.</p>
+
+    <h3>Skill verification and expected output format</h3>
+    <table>
+      <thead><tr><th>Skill/check</th><th>Findings when checked against project</th><th>Expected-format verification</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>automation-architect (pom-architect + test-standards)</td>
+          <td>Before fixes: configured-account fixture was needed; initial login and booking flow did not complete. After targeted changes: zero remaining violations in the reviewed scope.</td>
+          <td>Skill files define per-violation entries and a pipeline summary. Findings and final status are documented here, but the native skill invocation and its exact pipeline output format could not be triggered in this session. The format is therefore not claimed as natively verified.</td>
+        </tr>
+        <tr>
+          <td>git-standards adapted review</td>
+          <td>Tracked local .env; ignore rule did not match the file. Untracked it, retained the local copy, and verified whitespace checks.</td>
+          <td>No git-standards skill file or required output template exists in the repository. Review and outcome are reported as an adapted prompt, not a native skill-format match.</td>
+        </tr>
+        <tr>
+          <td>spec-standards adapted review</td>
+          <td>Five independent Playwright cases use fixtures, aliases, and assertions in specs; TypeScript check passes.</td>
+          <td>No spec-standards skill file or required output template exists in the repository. Review and outcome are reported as an adapted prompt, not a native skill-format match.</td>
+        </tr>
+      </tbody>
+    </table>
 
     <h2>Prompt iteration</h2>
     <ol>
@@ -99,7 +121,7 @@
         credentials, selectors, or backend success messages. Five standalone cases now cover the
         sign-in heading, visible fields, password input type, enabled sign-in action, and
         registration-link destination.</li>
-      <li>The Git review was extended to inspect the actual tracked state, not only the ignore
+      <li>The Git prompt was adapted to inspect the actual tracked state, not only the ignore
         file. This surfaced the tracked local environment file; it is now excluded from future
         commits while remaining on the workstation.</li>
     </ol>
