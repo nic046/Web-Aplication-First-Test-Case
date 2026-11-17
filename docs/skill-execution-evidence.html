@@ -32,7 +32,8 @@
     <p><strong>Project:</strong> WEB_AUTOMATION_2026<br>
       <strong>Execution date:</strong> November 16, 2026<br>
       <strong>Repository:</strong>
-      <a href="https://github.com/nic046/Web-Aplication-First-Test-Case">nic046/Web-Aplication-First-Test-Case</a>
+      <a href="https://github.com/nic046/Web-Aplication-First-Test-Case">nic046/Web-Aplication-First-Test-Case</a><br>
+      <strong>Git branch:</strong> main
     </p>
 
     <h2>Before and after</h2>
@@ -108,10 +109,23 @@
 
     <h2>Test execution evidence</h2>
     <pre>npx playwright test --project=chromium
-5 passed (Chromium; 1 worker)
+Running 5 tests using 1 worker
+5 passed (Chromium; 1 worker; 23.6s)
 
 npx tsc --noEmit
 passed</pre>
+    <p><strong>Chromium test results - November 16, 2026:</strong></p>
+    <table>
+      <thead><tr><th>Test case</th><th>Result</th><th>Duration</th></tr></thead>
+      <tbody>
+        <tr><td>EventHub registration link › registration link points to the registration route</td><td class="status">PASS</td><td>6.4s</td></tr>
+        <tr><td>EventHub sign-in › sign-in page shows its heading</td><td class="status">PASS</td><td>3.9s</td></tr>
+        <tr><td>EventHub sign-in › sign-in form displays email and password fields</td><td class="status">PASS</td><td>3.4s</td></tr>
+        <tr><td>EventHub sign-in › password field uses a masked input type</td><td class="status">PASS</td><td>3.9s</td></tr>
+        <tr><td>EventHub sign-in › sign-in button is enabled</td><td class="status">PASS</td><td>4.9s</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Summary:</strong> 5 passed, 0 failed. Project: Chromium. Workers: 1. Total duration: 23.6 seconds.</p>
     <p>Playwright generated an HTML report at <code>playwright-report/index.html</code> in the
       project working copy. The report folder is ignored by Git and can be regenerated with the
       command above.</p>
