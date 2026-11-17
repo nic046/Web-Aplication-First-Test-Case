@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Automation Skill Execution Evidence</title>
+    <style>
+      :root { color-scheme: light; font-family: "Segoe UI", Arial, sans-serif; color: #172033; }
+      body { max-width: 980px; margin: 0 auto; padding: 36px 28px; line-height: 1.55; }
+      h1, h2 { color: #17365d; }
+      h1 { margin-bottom: 4px; }
+      h2 { margin-top: 32px; border-bottom: 1px solid #ccd5e0; padding-bottom: 6px; }
+      table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+      th, td { border: 1px solid #ccd5e0; padding: 9px 11px; text-align: left; vertical-align: top; }
+      th { background: #edf3fa; }
+      code { background: #f0f2f5; padding: 1px 4px; }
+      .status { color: #146c43; font-weight: 700; }
+      .note { background: #fff7df; border-left: 4px solid #e6ad18; padding: 12px 16px; }
+      figure { margin: 22px 0; page-break-inside: avoid; }
+      figure img { width: 100%; max-height: 230mm; object-fit: contain; object-position: top; border: 1px solid #ccd5e0; }
+      figcaption { margin-top: 6px; color: #4b5563; font-size: 13px; }
+      pre { white-space: pre-wrap; background: #f5f7fa; padding: 12px; border-radius: 4px; }
+      @media print {
+        body { max-width: none; padding: 12mm; }
+        h2 { page-break-after: avoid; }
+        a { color: inherit; text-decoration: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Web Automation — Skill Execution Evidence</h1>
+    <p><strong>Project:</strong> WEB_AUTOMATION_2026<br>
+      <strong>Execution date:</strong> November 16, 2026<br>
+      <strong>Repository:</strong>
+      <a href="https://github.com/nic046/Web-Aplication-First-Test-Case">nic046/Web-Aplication-First-Test-Case</a>
+    </p>
+
+    <h2>Before and after</h2>
+    <table>
+      <thead><tr><th>Check</th><th>Before</th><th>After</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Automation architecture (POM + test standards)</td>
+          <td>The tests used the page objects and descriptive suites, but the auth fixture selected a hardcoded sample account and login never completed in the target app.</td>
+          <td class="status">0 remaining POM/test-standards violations in the reviewed scope. The fixture now uses configured user data.</td>
+        </tr>
+        <tr>
+          <td>Test execution</td>
+          <td>2 Chromium tests failed: the login success assertion never appeared, and the booking flow timed out because it remained unauthenticated.</td>
+          <td class="status">5 independent UI tests passed on Chromium.</td>
+        </tr>
+        <tr>
+          <td>Git conventions</td>
+          <td><code>.env</code> was tracked, and the ignore rule only matched an <code>.env/</code> directory.</td>
+          <td class="status">The local environment file is untracked and retained locally; <code>.env</code> is now ignored.</td>
+        </tr>
+        <tr>
+          <td>Code conventions</td>
+          <td>No dedicated code-conventions skill or lint script is present in this workspace.</td>
+          <td class="status">TypeScript check and Git whitespace check pass; changed files follow the project’s existing TypeScript patterns.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Adapted prompts and execution</h2>
+    <p>The repository provides <code>automation-architect</code>, <code>pom-architect</code>, and
+      <code>test-standards</code> skill files. These were read and applied directly as the
+      workspace’s custom-skill instructions. This session does not provide a separate custom-skill
+      invocation tool, nor does the repository contain <code>git-conventions</code> or
+      <code>code-conventions</code> skill files; those two checks below were executed as adapted
+      review prompts and are not represented as native skill invocations.</p>
+
+    <h3>automation-architect</h3>
+    <pre>Run the full automation-architect pipeline on this Playwright + TypeScript project. Inspect all specs, Page Objects, fixtures, test data, aliases, tsconfig, and Playwright config. Apply pom-architect and test-standards; do not assume authentication succeeded. Preserve behavior where verified, report blockers accurately, and validate the changed scope.</pre>
+    <p><strong>Result:</strong> The POM structure, locator getters, async actions, assertion placement,
+      fixture ownership, alias usage, test grouping, and test independence were reviewed. The
+      hardcoded sample account was removed from fixture data. Final result: zero remaining
+      violations in the reviewed scope.</p>
+
+    <h3>git-conventions / git-standards adapted review</h3>
+    <pre>Review the repository state and changed files for Git conventions: confirm the intended branch and remote, inspect tracked environment files and ignore rules, check whitespace, and ensure only task-related files are staged. Do not expose environment values.</pre>
+    <p><strong>Result:</strong> Found and corrected the tracked <code>.env</code> issue. The local
+      file remains available for running tests. <code>git diff --check</code> passes. Existing
+      <code>playwright.config.ts</code> changes were present before this task and were not altered.</p>
+
+    <h3>code-conventions / spec-standards adapted review</h3>
+    <pre>Review the Playwright specs and related TypeScript changes for project conventions: use @fixtures and path aliases, keep interactions in Page Objects, use descriptive independent tests, avoid hardcoded credentials, and run the narrowest available type-check and Chromium tests.</pre>
+    <p><strong>Result:</strong> Five scenarios are grouped by feature and use fixture-provided Page
+      Objects. Assertions remain in specs. <code>npx tsc --noEmit</code> passes. No dedicated
+      linter is configured in <code>package.json</code>.</p>
+
+    <h2>Prompt iteration</h2>
+    <ol>
+      <li>The initial end-to-end prompts assumed valid authentication. Baseline execution showed
+        that the sign-in flow stayed on the login screen and the booking test then waited for a
+        booking control that was never reached.</li>
+      <li>The prompt was narrowed to observable, unauthenticated UI behavior rather than inventing
+        credentials, selectors, or backend success messages. Five standalone cases now cover the
+        sign-in heading, visible fields, password input type, enabled sign-in action, and
+        registration-link destination.</li>
+      <li>The Git review was extended to inspect the actual tracked state, not only the ignore
+        file. This surfaced the tracked local environment file; it is now excluded from future
+        commits while remaining on the workstation.</li>
+    </ol>
+    <p class="note"><strong>History note:</strong> Removing <code>.env</code> from the current
+      Git index does not erase it from older commits. If it contained real credentials, rotate
+      them and consider a separate history-cleanup process.</p>
+
+    <h2>Test execution evidence</h2>
+    <pre>npx playwright test --project=chromium
+5 passed (Chromium; 1 worker)
+
+npx tsc --noEmit
+passed</pre>
+    <p>Playwright generated an HTML report at <code>playwright-report/index.html</code> in the
+      project working copy. The report folder is ignored by Git and can be regenerated with the
+      command above.</p>
+
+    <h2>Screenshots of skills and written files</h2>
+    <figure>
+      <img src="./evidence/automation-architect.png" alt="Automation architect skill file">
+      <figcaption>Repository skill: automation-architect/SKILL.md</figcaption>
+    </figure>
+    <figure>
+      <img src="./evidence/pom-architect.png" alt="POM architect skill file">
+      <figcaption>Repository skill: pom-architect/SKILL.md</figcaption>
+    </figure>
+    <figure>
+      <img src="./evidence/test-standards.png" alt="Test standards skill file">
+      <figcaption>Repository skill: test-standards/SKILL.md</figcaption>
+    </figure>
+    <figure>
+      <img src="./evidence/test-spec.png" alt="Chromium UI test spec">
+      <figcaption>Written test cases: tests/test.spec.ts</figcaption>
+    </figure>
+    <figure>
+      <img src="./evidence/login-spec.png" alt="Registration navigation test spec">
+      <figcaption>Written test case: tests/login.spec.ts</figcaption>
+    </figure>
+    <figure>
+      <img src="./evidence/login-page.png" alt="Login page object">
+      <figcaption>Page Object supporting the test cases: src/ui/pages/LoginPage.ts</figcaption>
+    </figure>
+  </body>
+</html>
