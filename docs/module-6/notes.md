@@ -31,3 +31,13 @@ Both scenarios clean up resources in `finally` blocks. The API client derives th
 The Chromium run used Node's system certificate store (`NODE_USE_SYSTEM_CA=1`) because the current shell has an invalid `NODE_EXTRA_CA_CERTS` path. TLS verification remained enabled.
 
 Skill review details and the native invocation limitation are recorded in [skill-verification.md](./skill-verification.md). Prompt changes and their rationale are recorded in [prompt-iteration.md](./prompt-iteration.md).
+
+## Screenshot evidence
+
+The five evidence screenshots are saved in `../evidence/module-6/` and embedded in the linked Module 6 Google Doc:
+
+- `01-prompt-execution.png`
+- `02-skill-verification.png`
+- `03-prompt-iteration.png`
+- `04-written-files.png`
+- `05-chromium-execution.png`
