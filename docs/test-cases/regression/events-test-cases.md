@@ -38,3 +38,35 @@
 |----------------------|---------|-------|
 | Event `{eventId}` no longer exists | DELETE `/events/{eventId}` in finally cleanup if deletion did not complete | only event created by TC6 |
 
+**Automation handoff**
+
+```yaml
+tc: TC6
+title: Create, read, and delete an event through the API
+suite: regression
+tags: ['@mutates-data']
+automation: automatable
+fixtures:
+  identity: worker<EventHubApi>
+  state: created<Event>
+data:
+  - name: eventTitle
+    class: transactional
+    source: buildEventPayload()
+  - name: eventPayload
+    class: transactional
+    source: src/data/events.data.ts
+captured: [eventId]
+steps:
+  - action: POST /events
+    oracle: HTTP 201; success is true; event ID is an integer
+  - action: GET /events/{eventId}
+    oracle: title equals eventTitle and category equals Workshop
+  - action: DELETE /events/{eventId}
+    oracle: HTTP 200
+  - action: GET /events/{eventId}
+    oracle: HTTP 404
+postconditions:
+  - delete only eventId created by TC6
+```
+
