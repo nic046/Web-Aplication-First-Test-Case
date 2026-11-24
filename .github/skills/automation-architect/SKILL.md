@@ -21,10 +21,20 @@ Coordinate the POM and test-quality skills for this Playwright + TypeScript proj
 
 Triggered by “aplicar arquitectura”, “apply architecture”, “full review”, or “enforce all rules”.
 
+0. Run `spec-requirements-standard` M0 on `docs/test-cases/**` (report only, no auto-fix except Q13). TCs graded Incomplete are listed as manual items.
 1. Identify all relevant specs, Page Objects, components, fixtures, data, and configuration files.
 2. Apply the `pom-architect` workflow: detect and auto-fix safe POM violations.
 3. Apply the `test-standards` workflow: detect and auto-fix safe test/fixture violations.
-4. Run focused validation and report remaining manual fixes. Do not claim either sub-skill completed unless its review was actually performed.
+4. Apply `lifecycle-architect` workflow for API-backed lifecycle scenarios.
+5. Run `api-setup-teardown-standard` workflow for API setup and cleanup, if this project uses the named sub-skill.
+6. Run `spec-organisation-standard` on `tests/**/*.spec.ts`:
+   - Enforce folder hierarchy, names, TC IDs, describe names, and `test.step()`.
+   - Auto-fix safe organisation violations.
+7. Run `spec-quality-lifecycle-standard` on `tests/**/*.spec.ts` and `src/ui/pages/**/*.ts`:
+   - Detect all TC quality violations.
+   - Auto-fix every fixable violation (R3, R4).
+   - Collect R1, R2, R5-R10 items as manual fixes.
+8. Run focused validation and report remaining manual fixes. Do not claim a sub-skill completed unless its review was actually performed.
 
 ### Mode 2 — Structure Only
 
@@ -44,7 +54,57 @@ Triggered by “generar”, “crear”, “scaffold”, “nuevo Page Object”
 4. Generate `tests/<name>.spec.ts` importing from `@fixtures` and `@data`, with a descriptive `test.describe()` block.
 5. Verify zero relative imports in all generated files, then validate fixture types and the narrowest applicable test/typecheck.
 
+### Mode 7 — TC Quality Review
+
+**Triggers:** `"review tc quality"` · `"check test quality"` · `"scan for flaky patterns"` · `"tc quality"`
+
+**When to use:** After writing or refactoring test cases, or when a test shows intermittent failures. Run before every PR that includes new or modified specs.
+
+1. Load and invoke `spec-quality-lifecycle-standard`.
+2. Determine mode:
+   - Single file provided → Enforce on that file only.
+   - No file provided → Enforce on all `tests/**/*.spec.ts`.
+3. Forward all output verbatim.
+
+Requests containing `"assess test cases"`, `"refine test case"`, `"write test case"`, or `"tc coverage"` are forwarded to `spec-requirements-standard` as phase 1 of the TC lifecycle.
+
+**Note:** Load `spec-quality-lifecycle-standard` directly for standalone TC review without activating the hub.
+
+## Sub-Skill Registry
+
+| Skill | Domain | File Scope | Rules / Checks | Added | Status |
+|-------|--------|------------|----------------|-------|--------|
+| `pom-architect` | Page Object architecture | `src/ui/pages/**/*.ts` | POM structure and locators | M1 | Active |
+| `test-standards` | Test structure and fixtures | `tests/**/*.spec.ts` · `src/fixtures/**/*.ts` | Imports, fixtures, independence | M1 | Active |
+| `lifecycle-architect` | API-backed resource lifecycle | `tests/**/*.spec.ts` · `src/api/**/*.ts` | Preconditions, read-back assertions, cleanup | M6 | Active |
+| `spec-quality-lifecycle-standard` | TC body quality · assertions · selectors · wait strategies · flakiness prevention | `tests/**/*.spec.ts` · `src/ui/pages/**/*.ts` | R1-R10 | M7 | Active |
+| `spec-requirements-standard` | TC specification: traceability · preconditions · data · oracles · postconditions · readiness | `docs/test-cases/**/*.md` | Q1-Q13 · M0-M4 | M6 | Active |
+| `spec-organisation-standard` | Spec organisation: folder hierarchy · filenames · TC IDs · describe names · test steps | `tests/**/*.spec.ts` | R1-R5 | M6 | Active |
+
+## Scan Scope Ownership
+
+| File / Scope | Owner skill | Concern |
+|--------------|-------------|---------|
+| `tests/**/*.spec.ts` — preconditions/postconditions | `spec-quality-lifecycle-standard` | R1, R2 |
+| `tests/**/*.spec.ts` — assertion quality and waits | `spec-quality-lifecycle-standard` | R3, R4, R6, R9, R10 |
+| `tests/**/*.spec.ts` — test independence | `spec-quality-lifecycle-standard` | R7, R8 |
+| `src/ui/pages/**/*.ts` — locator resilience | `spec-quality-lifecycle-standard` | R5 |
+| `docs/test-cases/**/*.md` — specification content quality | `spec-requirements-standard` | Q1-Q13 |
+| `tests/**/*.spec.ts` — organisation and step structure | `spec-organisation-standard` | R1-R5 |
+
+## Sub-Skill Invocation Reference
+
+| Goal | Skill to load | Trigger phrase example |
+|------|---------------|------------------------|
+| Review TC quality and anti-flakiness patterns | `spec-quality-lifecycle-standard` | `"review tc quality"` |
+| Score TC specifications | `spec-requirements-standard` | `"assess test cases"` |
+| Upgrade an incomplete TC | `spec-requirements-standard` | `"refine test case TC02"` |
+| Prepare a TC for automation | `spec-requirements-standard` | `"automation readiness TC02"` |
+| Fix TC folder / naming / step violations | `spec-organisation-standard` | `"check spec structure"` |
+
 ## Hub Growth Policy
+
+<!-- Mode slot usage: (7 of 10 slots used) -->
 
 The hub grows by adding new modes as the course progresses (M5 adds Modes 4–6, later modules may add more). To prevent uncontrolled growth and context overload, the following rules are mandatory and must be documented inside `automation-architect` `SKILL.md`:
 
@@ -72,9 +132,14 @@ For each violation, preserve the owning skill's required format, file path, line
 ```text
 [automation-architect] PIPELINE COMPLETE
 ─────────────────────────────────────────
-pom-architect:    X violations found — Y auto-applied
-test-standards:   X violations found — Y auto-applied
-Remaining manual fixes: <list if any>
+ui-pom-standard:             X violations found — Y auto-applied
+spec-code-standard:          X violations found — Y auto-applied
+spec-organisation-standard:  X violations found — Y auto-applied
+api-setup-teardown-standard: X violations found — Y auto-applied
+spec-quality-lifecycle-standard: X violations found — Y auto-applied
+pom-architect:               X violations found — Y auto-applied
+test-standards:              X violations found — Y auto-applied
+Remaining manual fixes: <list if any, or "none">
 [automation-architect] ✅ All rules satisfied.
 ```
 
