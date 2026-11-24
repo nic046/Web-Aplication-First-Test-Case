@@ -1,19 +1,9 @@
-import { randomUUID } from 'node:crypto';
 import { test, expect } from '@fixtures';
 import { EventHubApi } from '@api/eventhub-api';
+import { buildEventPayload } from '@data/events.data';
 
 type ApiEnvelope<T> = { success: boolean; data: T };
 type EventRecord = { id: number; title: string; category: string };
-
-const eventPayload = (title: string, totalSeats: number) => ({
-  title,
-  category: 'Workshop',
-  venue: 'Online',
-  city: 'Remote',
-  eventDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
-  price: 1,
-  totalSeats,
-});
 
 const cleanUpResource = async (api: EventHubApi, path: string): Promise<void> => {
   const response = await api.delete(path);
@@ -23,14 +13,15 @@ const cleanUpResource = async (api: EventHubApi, path: string): Promise<void> =>
 };
 
 test.describe('Events', () => {
-  test('TC6: Create, read, and delete an event through the API', async ({ request }) => {
+  test('TC6: Create, read, and delete an event through the API', { tag: '@mutates-data' }, async ({ request }, testInfo) => {
     const api = await EventHubApi.authenticate(request);
     let eventId: number | undefined;
     let eventDeleted = false;
 
     try {
       const created = await test.step('Create an isolated event', async () => {
-        const response = await api.post('/events', eventPayload(`Lifecycle event ${randomUUID()}`, 3));
+        const payload = buildEventPayload('lifecycle', testInfo.parallelIndex);
+        const response = await api.post('/events', payload);
         expect(response.status()).toBe(201);
         const envelope = (await response.json()) as ApiEnvelope<EventRecord>;
         expect(envelope.success).toBe(true);

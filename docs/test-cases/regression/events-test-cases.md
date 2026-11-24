@@ -20,8 +20,8 @@
 
 | Item | Value or generation rule | Class | Source |
 |------|--------------------------|-------|--------|
-| eventTitle | `Lifecycle event ` + random UUID | Transactional | factory |
-| eventPayload | Workshop, Online, Remote, 20 days in the future, price 1, 3 seats | Transactional | factory |
+| eventTitle | `ENV.testDataPrefix` + `lifecycle` + parallel index + timestamp + UUID | Transactional | `src/data/events.data.ts` factory |
+| eventPayload | Workshop, Online, Remote, 20 days in the future, price 1, 3 seats | Transactional | `buildEventPayload()` factory |
 
 **Steps** *
 

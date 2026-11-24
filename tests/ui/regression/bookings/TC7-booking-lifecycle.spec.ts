@@ -1,21 +1,11 @@
-import { randomUUID } from 'node:crypto';
 import { test, expect } from '@fixtures';
 import { EventHubApi } from '@api/eventhub-api';
 import { users } from '@data/auth.data';
+import { buildEventPayload } from '@data/events.data';
 
 type ApiEnvelope<T> = { success: boolean; data: T };
 type EventRecord = { id: number; title: string; category: string };
 type BookingRecord = { id: number; eventId: number; quantity: number; status: string };
-
-const eventPayload = (title: string, totalSeats: number) => ({
-  title,
-  category: 'Workshop',
-  venue: 'Online',
-  city: 'Remote',
-  eventDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
-  price: 1,
-  totalSeats,
-});
 
 const cleanUpResource = async (api: EventHubApi, path: string): Promise<void> => {
   const response = await api.delete(path);
@@ -25,7 +15,7 @@ const cleanUpResource = async (api: EventHubApi, path: string): Promise<void> =>
 };
 
 test.describe('Bookings', () => {
-  test('TC7: Create, read, and delete a booking through the API', async ({ request }) => {
+  test('TC7: Create, read, and delete a booking through the API', { tag: '@mutates-data' }, async ({ request }, testInfo) => {
     const api = await EventHubApi.authenticate(request);
     let eventId: number | undefined;
     let bookingId: number | undefined;
@@ -34,7 +24,7 @@ test.describe('Bookings', () => {
 
     try {
       await test.step('Create a temporary event precondition', async () => {
-        const response = await api.post('/events', eventPayload(`Booking lifecycle ${randomUUID()}`, 3));
+        const response = await api.post('/events', buildEventPayload('booking', testInfo.parallelIndex));
         expect(response.status()).toBe(201);
         const envelope = (await response.json()) as ApiEnvelope<EventRecord>;
         eventId = envelope.data.id;

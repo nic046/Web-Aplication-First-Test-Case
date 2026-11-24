@@ -27,14 +27,15 @@ Triggered by “aplicar arquitectura”, “apply architecture”, “full revie
 3. Apply the `test-standards` workflow: detect and auto-fix safe test/fixture violations.
 4. Apply `lifecycle-architect` workflow for API-backed lifecycle scenarios.
 5. Run `api-setup-teardown-standard` workflow for API setup and cleanup, if this project uses the named sub-skill.
-6. Run `spec-organisation-standard` on `tests/**/*.spec.ts`:
+6. Run `spec-data-standard` M1-M4 on fixtures, data, config, and specs.
+7. Run `spec-organisation-standard` on `tests/**/*.spec.ts`:
    - Enforce folder hierarchy, names, TC IDs, describe names, and `test.step()`.
    - Auto-fix safe organisation violations.
-7. Run `spec-quality-lifecycle-standard` on `tests/**/*.spec.ts` and `src/ui/pages/**/*.ts`:
+8. Run `spec-quality-lifecycle-standard` on `tests/**/*.spec.ts` and `src/ui/pages/**/*.ts`:
    - Detect all TC quality violations.
    - Auto-fix every fixable violation (R3, R4).
    - Collect R1, R2, R5-R10 items as manual fixes.
-8. Run focused validation and report remaining manual fixes. Do not claim a sub-skill completed unless its review was actually performed.
+9. Run focused validation and report remaining manual fixes. Do not claim a sub-skill completed unless its review was actually performed.
 
 ### Mode 2 — Structure Only
 
@@ -80,6 +81,7 @@ Requests containing `"assess test cases"`, `"refine test case"`, `"write test ca
 | `spec-quality-lifecycle-standard` | TC body quality · assertions · selectors · wait strategies · flakiness prevention | `tests/**/*.spec.ts` · `src/ui/pages/**/*.ts` | R1-R10 | M7 | Active |
 | `spec-requirements-standard` | TC specification: traceability · preconditions · data · oracles · postconditions · readiness | `docs/test-cases/**/*.md` | Q1-Q13 · M0-M4 | M6 | Active |
 | `spec-organisation-standard` | Spec organisation: folder hierarchy · filenames · TC IDs · describe names · test steps | `tests/**/*.spec.ts` | R1-R5 | M6 | Active |
+| `spec-data-standard` | Test data: classification · isolation · sourcing · environments · expected values | `src/data/**` · `src/config/**` · `src/fixtures/**` · `playwright.config.ts` · `tests/**/*.spec.ts` | R1-R15 · M0-M5 | M6 | Active |
 
 ## Scan Scope Ownership
 
@@ -91,6 +93,11 @@ Requests containing `"assess test cases"`, `"refine test case"`, `"write test ca
 | `src/ui/pages/**/*.ts` — locator resilience | `spec-quality-lifecycle-standard` | R5 |
 | `docs/test-cases/**/*.md` — specification content quality | `spec-requirements-standard` | Q1-Q13 |
 | `tests/**/*.spec.ts` — organisation and step structure | `spec-organisation-standard` | R1-R5 |
+| `src/data/**` — shape, typing, uniqueness | `spec-data-standard` | R2, R3, R6 |
+| `src/config/**` — environment selection and validation | `spec-data-standard` | R9 |
+| `src/fixtures/**` — fixture scope and data identity | `spec-data-standard` | R1, R12 |
+| `playwright.config.ts` — parallelism | `spec-data-standard` | R4 |
+| `tests/**/*.spec.ts` — data sourcing, environment literals, tags, exact values | `spec-data-standard` | R5, R7-R14 |
 
 ## Sub-Skill Invocation Reference
 
@@ -101,6 +108,9 @@ Requests containing `"assess test cases"`, `"refine test case"`, `"write test ca
 | Upgrade an incomplete TC | `spec-requirements-standard` | `"refine test case TC02"` |
 | Prepare a TC for automation | `spec-requirements-standard` | `"automation readiness TC02"` |
 | Fix TC folder / naming / step violations | `spec-organisation-standard` | `"check spec structure"` |
+| Assess test data maturity | `spec-data-standard` | `"assess test data"` |
+| Make tests safe in parallel | `spec-data-standard` | `"parallel safe"` |
+| Verify robustness with evidence | `spec-data-standard` | `"verify robustness"` |
 
 ## Hub Growth Policy
 

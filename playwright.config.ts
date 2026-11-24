@@ -16,8 +16,8 @@ export default defineConfig({
   forbidOnly: !!processEnv.CI,
   /* Retry on CI only */
   retries: processEnv.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: processEnv.CI ? 1 : undefined,
+  // spec-data: serial - Demo UI fixtures share one account and invalidate parallel sessions.
+  workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['list'],
